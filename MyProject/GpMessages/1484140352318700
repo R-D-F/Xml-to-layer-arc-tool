@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Sunday, March 31, 2024 12:56:53 PM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Processing geodatabase</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x000002C5A74660D0&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="0" type="0">
+ 2. Formatting for Map</msg><msg code="0" type="0">
+    - Sections</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "D:\working\xml_to_layer.py", line 172, in &lt;module&gt;
+    main()
+  File "D:\working\xml_to_layer.py", line 143, in main
+    lyr_sec = arcpy.mp.LayerFile(dst_sections)
+  File "C:\Program Files\ArcGIS\Pro\Resources\ArcPy\arcpy\_mp.py", line 1304, in __init__
+    self._arc_object = arcgisscripting._mapping.LayerFile(*gp_fixargs((layer_file_path,), True))
+ValueError: D:\working\MyProject\IGNACIO_MARE_ISLAND_2_115KV_TRUE_Snowload.gdb\Sections
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Sunday, March 31, 2024 12:57:02 PM (Elapsed Time: 9.64 seconds)</msg></messages>

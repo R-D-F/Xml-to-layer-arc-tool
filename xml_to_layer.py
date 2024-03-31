@@ -54,8 +54,7 @@ def main():
     xml_file = arcpy.GetParameterAsText(0)
     xml_sr = arcpy.GetParameter(1)
     dst_dir = arcpy.GetParameterAsText(2)
-    sym_sec = arcpy.GetParameterAsText(3)
-    sym_str = arcpy.GetParameterAsText(4)
+
 
     # Output geodatabase
     dst_name = safe_name(
@@ -66,8 +65,7 @@ def main():
     dst_sections = os.path.join(dst_gdb, 'Sections')
     dst_report = os.path.join(dst_gdb, 'Tower_Report.csv')
 
-    dst_str_lyr = os.path.join(dst_dir, dst_name + '_Structures.lyr')
-    dst_sec_lyr = os.path.join(dst_dir, dst_name + '_Sections.lyr')
+
 
     add_message('\n 1. Creating outputs\n')
     if not arcpy.Exists(dst_gdb):
@@ -80,90 +78,16 @@ def main():
     add_message("testing")
     add_message(f"{xml_sr}")
     xml_to_spans(xml_file, dst_spans, dst_structures, sr=xml_sr)
-    arcpy.DefineProjection_management(dst_spans, arcpy.SpatialReference("NAD 1983 (2011) UTM Zone 10N"))
+    arcpy.DefineProjection_management(dst_spans, xml_sr)
 
     add_message('    - Structures')
     xml_to_tower_report(xml_file=xml_file, output=dst_report)
     tower_report_to_shape(dst_report, dst_structures)
-    arcpy.DefineProjection_management(dst_structures, arcpy.SpatialReference("NAD 1983 (2011) UTM Zone 10N"))
+    arcpy.DefineProjection_management(dst_structures, xml_sr)
 
     add_message('    - Sections')
     prep_for_qc(dst_spans, dst_sections)
 
-    # Format layers
-    # add_message('\n 2. Formatting for Map')
-    # mxd = arcpy.mapping.MapDocument('CURRENT')
-    # df = arcpy.mapping.ListDataFrames(mxd)[0]
-    # arcpy.RefreshActiveView()
-    # arcpy.RefreshTOC()
-
-    # add_message('\n    - Sections')
-    # lyr_sec = arcpy.mapping.Layer(dst_sections)
-    # arcpy.ApplySymbologyFromLayer_management(lyr_sec, sym_sec)
-    # lyr_sec.showLabels = True
-    # if lyr_sec.supports('LABELCLASSES'):
-    #     for label in lyr_sec.labelClasses:
-    #         label.expression = "[{}]".format('SNOWLOAD')
-
-    # # Structure layer, filtered to dead ends
-    # add_message('    - Dead-end Structures')
-    # lyr_str = arcpy.mapping.Layer(dst_structures)
-    # arcpy.ApplySymbologyFromLayer_management(lyr_str, sym_str)
-    # lyr_str.definitionQuery = "STR_TYPE = 'Dead End'"
-
-    # arcpy.mapping.AddLayer(df, lyr_str, 'BOTTOM')
-    # arcpy.mapping.AddLayer(df, lyr_sec, 'TOP')
-
-    # # Save and export kmz
-    # arcpy.RefreshActiveView()
-    # arcpy.RefreshTOC()
-
-    # # Save layer files
-    # add_message('\n 2. Saving layer files')
-    # add_message('\n    - Structures')
-    # arcpy.SaveToLayerFile_management(lyr_str, dst_str_lyr)
-    # add_message('    - Sections')
-    # arcpy.SaveToLayerFile_management(lyr_sec, dst_sec_lyr)
-    # Open the current project
-    aprx = arcpy.mp.ArcGISProject("CURRENT")
-    map = aprx.listMaps()[0]  
-    
-    # Format layers
-    add_message('\n 2. Formatting for Map')
-    
-    # Accessing the default data frame in ArcGIS Pro
-    # df = map.defaultDataFrame
-    
-    arcpy.RefreshActiveView()
-    arcpy.RefreshTOC()
-
-    add_message('\n    - Sections')
-    lyr_sec = arcpy.mp.LayerFile(dst_sections)
-    arcpy.ApplySymbologyFromLayer_management(lyr_sec, sym_sec)
-    lyr_sec.showLabels = True
-    if lyr_sec.supports('LABELCLASSES'):
-        for label in lyr_sec.labelClasses:
-            label.expression = "[{}]".format('SNOWLOAD')
-
-    # Structure layer, filtered to dead ends
-    add_message('    - Dead-end Structures')
-    lyr_str = arcpy.mp.LayerFile(dst_structures)
-    arcpy.ApplySymbologyFromLayer_management(lyr_str, sym_str)
-    lyr_str.definitionQuery = "STR_TYPE = 'Dead End'"
-
-    map.addLayer(lyr_str, 'BOTTOM')
-    map.addLayer(lyr_sec, 'TOP')
-
-    # Save and export kmz
-    arcpy.RefreshActiveView()
-    arcpy.RefreshTOC()
-
-    # Save layer files
-    add_message('\n 2. Saving layer files')
-    add_message('\n    - Structures')
-    arcpy.SaveToLayerFile_management(lyr_str, dst_str_lyr)
-    add_message('    - Sections')
-    arcpy.SaveToLayerFile_management(lyr_sec, dst_sec_lyr)
 
 if __name__ == '__main__':
     main()
