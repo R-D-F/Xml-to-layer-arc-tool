@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Sunday, March 31, 2024 9:40:46 PM</msg><msg code="0" type="0">
- 1. Creating outputs
-</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x000001D630C78FB0&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="0" type="0">['cable_file_name', 'from_str', 'to_str', 'best_match', 'arc_wire_type', 'arc_from_str', 'arc_to_str']</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
-  File "D:\working\xml_to_layer.py", line 225, in &lt;module&gt;
-    main()
-  File "D:\working\xml_to_layer.py", line 214, in main
-    row[1] = pls_cadd_list[i][unique_keys[1]]
-IndexError: list index out of range
-</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Sunday, March 31, 2024 9:41:00 PM (Elapsed Time: 13.65 seconds)</msg></messages>

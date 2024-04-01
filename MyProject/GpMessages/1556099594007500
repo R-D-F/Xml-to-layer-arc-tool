@@ -1,3 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Monday, April 1, 2024 8:56:12 AM</msg><msg code="0" type="0">
- 1. Creating outputs
-</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x000001D630C78570&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="0" type="0">['BST_ID', 'cable_file_name', 'from_str', 'to_str', 'best_match', 'arc_wire_type', 'arc_from_str', 'arc_to_str']</msg><msg code="0" type="3">Succeeded at Monday, April 1, 2024 8:56:27 AM (Elapsed Time: 14.21 seconds)</msg></messages>

@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Monday, April 1, 2024 9:06:02 AM</msg><msg code="-2147467259" type="100">  File "D:\working\xml_to_layer.py", line 214
-    add_message(f"bst_id{str(item["from_str"])}")
-                                   ^
-SyntaxError: f-string: unmatched '['
-</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Monday, April 1, 2024 9:06:02 AM (Elapsed Time: 0.18 seconds)</msg></messages>

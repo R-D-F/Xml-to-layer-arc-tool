@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Sunday, March 31, 2024 7:34:59 PM</msg><msg code="0" type="0">
- 1. Creating outputs
-</msg><msg code="0" type="0">    - Processing geodatabase</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x000001D630C78F90&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
-  File "D:\working\xml_to_layer.py", line 225, in &lt;module&gt;
-    main()
-  File "D:\working\xml_to_layer.py", line 199, in main
-    unique_keys.update(dictionary.keys())
-AttributeError: 'str' object has no attribute 'keys'
-</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Sunday, March 31, 2024 7:36:02 PM (Elapsed Time: 1 minutes 3 seconds)</msg></messages>
