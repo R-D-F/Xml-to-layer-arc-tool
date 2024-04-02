@@ -128,6 +128,11 @@ def pls_cadd_comparison_table(xml):
                     })
     else:
         arcpy.AddMessage("No matching saps_func_location_number found.")
+    
+    # changing CU to copper for fuzzy finder
+    for item in arc_pro_list:
+        if item["CONDUCTOR_TYPE"] == "CU":
+            item["CONDUCTOR_TYPE"] = "copper"
 
     for section_arc in arc_pro_list:
         for section_pls in pls_cadd_list:
@@ -149,6 +154,7 @@ def pls_cadd_comparison_table(xml):
         for section_pls_2 in pls_cadd_list:
             if section_pls_2["arc_from_str"] == arc_from and section_pls_2["best_match"] > section_pls["best_match"]:
                 section_pls.update({"best_match":0, "arc_wire_type":"", "arc_from_str":"", "arc_to_str":""})
+
     return pls_cadd_list
 
 
@@ -194,29 +200,36 @@ def main():
     prep_for_qc(dst_spans, dst_sections)
 
     pls_cadd_list = pls_cadd_comparison_table(xml_file_structure_comment_1)
+    # creating a copy of the spans feature
+    copied_spans = os.path.join(dst_gdb, 'Spans_Copy')
+    arcpy.CopyFeatures_management(dst_spans, copied_spans)
+    #creating a copy of the sections feature
+    copied_section = os.path.join(dst_gdb, 'Sections_Copy')
+    arcpy.CopyFeatures_management(dst_sections, copied_section)
+    #creating a copy of the structures feature
+    copied_structures = os.path.join(dst_gdb, 'Structures_Copy')
+    arcpy.CopyFeatures_management(dst_structures, copied_structures)
 
     unique_keys = list(pls_cadd_list[0].keys())
     unique_keys = unique_keys[1:]
     
     # removes "sec_no"
-    
     unique_keys.insert(0, "BST_ID")
-    add_message(str(unique_keys))
+    
     for key in pls_cadd_list[0].keys():
         # Exclude the 'sec_no' key as it's not needed as a field
         if key != 'sec_no':
-            arcpy.AddField_management(dst_spans, key, 'TEXT')
+            arcpy.AddField_management(copied_spans, key, 'TEXT')
     
-    with arcpy.da.UpdateCursor(dst_spans, unique_keys) as cursor:
+    with arcpy.da.UpdateCursor(copied_spans, unique_keys) as cursor:
         for row in cursor:
         # Get the value of the first field in the current row
             current_from_str = row[0]
-            add_message(f"bst_id{current_from_str}")
+            
             
             # Search for a matching dictionary in pls_cadd_list based on current_from_str
             matching_dict = next((item for item in pls_cadd_list if (item["from_str"]) == current_from_str), None)
-            if matching_dict:
-                add_message(f"Matching Dictionary: {matching_dict}")
+
             # If a matching dictionary is found, update the second field of the current row
             if matching_dict:
                 row[1] = matching_dict["cable_file_name"]
@@ -227,18 +240,52 @@ def main():
                 row[6] = matching_dict["arc_from_str"]
                 row[7] = matching_dict["arc_to_str"]
 
-
-    # #need to get the plscadd list into the span attributes table
-    # with arcpy.da.UpdateCursor(dst_spans, unique_keys) as cursor:
-    #     for row in cursor:
-    #         for item in pls_cadd_list:
-    #             add_message(f"bst_id{str(row[0])}")
-    #             add_message(f"plscadd{str(item["from_str"])}")
-    #             if row[0] == item["from_str"]:
-    #                 row[1] = item["cable_file_name"]
-
-
                 cursor.updateRow(row)
+    # adding arc_wire_type and best_match_% to sections_copy
+    arcpy.AddField_management(copied_section, 'arc_wire_type', 'TEXT')
+    arcpy.AddField_management(copied_section, 'best_match', 'DOUBLE')
+
+    copied_section_fields = ["SECTION", "arc_wire_type", "best_match", "CABLE_FILE"]
+    #add data to new copied section
+    with arcpy.da.UpdateCursor(copied_section, copied_section_fields) as cursor:
+        for row in cursor:
+            for item in pls_cadd_list:
+                add_message(f"section{row[0]}")
+                add_message(f"pls{item['sec_no']}")
+                if row[0] == int(item["sec_no"]):
+                    row[1] = item["arc_wire_type"]
+                    row[2] = similarity_ratio(row[3], item["arc_wire_type"])
+            cursor.updateRow(row)
+
+    # adding arc_from_str and best match field to structures copy
+    arcpy.AddField_management(copied_structures, 'arc_from_str', 'TEXT')
+    arcpy.AddField_management(copied_structures, 'best_match', 'DOUBLE')
+
+    #setting best match to 0
+    with arcpy.da.UpdateCursor(copied_structures, "best_match") as cursor:
+        for row in cursor:
+            row[0] = 0
+            cursor.updateRow(row)
+
+    copied_structures_fields = ["STRUCTURE", "arc_from_str", "best_match"]
+    #adding data to stuctures copy
+    # this is all sorts of messed up, i think I need to make sure that it doesnt double some of the arc str nums
+
+    for item in pls_cadd_list:
+        if item["arc_from_str"] != "":
+            with arcpy.da.UpdateCursor(copied_structures, copied_structures_fields) as cursor:
+                for row in cursor:
+                    sim_rat = similarity_ratio(item["arc_from_str"], row[0])
+                    if sim_rat > row[2]:
+                        row[1] = item["arc_from_str"]
+                        row[2] = sim_rat
+                        cursor.updateRow(row)
+    other_list = ["STR_TYPE", "best_match"]
+    with arcpy.da.UpdateCursor(copied_structures, other_list) as cursor:
+        for row in cursor:
+            if row[0] != "Dead End" and row[1] == 0:
+                cursor.deleteRow()
+
 
 if __name__ == '__main__':
     main()
