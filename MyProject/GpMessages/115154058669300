@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Friday, April 12, 2024 4:05:16 PM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x0000026E09B545F0&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "D:\working\xml_to_layer.py", line 291, in &lt;module&gt;
+    main()
+  File "D:\working\xml_to_layer.py", line 284, in main
+    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb)
+  File "D:\working\xml_to_layer.py", line 224, in create_structures_feature_from_OH_conductor
+    for row in cursor:
+RuntimeError: An expected Field was not found or could not be retrieved properly. [arc_structres]
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Friday, April 12, 2024 4:06:19 PM (Elapsed Time: 1 minutes 3 seconds)</msg></messages>

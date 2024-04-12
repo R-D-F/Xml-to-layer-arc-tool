@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Friday, April 12, 2024 4:07:07 PM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x0000026E09B54DD0&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "D:\working\xml_to_layer.py", line 291, in &lt;module&gt;
+    main()
+  File "D:\working\xml_to_layer.py", line 284, in main
+    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb)
+  File "D:\working\xml_to_layer.py", line 224, in create_structures_feature_from_OH_conductor
+    for row in cursor:
+RuntimeError: An invalid SQL statement was used. [SELECT OBJECTID,STRUCTURE,ARC_FROM_STRUCTURE,ARC_TO_STRUCTURE,BEST_MATCH,WIRE FROM arc_structres WHERE OBJECTID* = IGNACIO_SUB]
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Friday, April 12, 2024 4:08:08 PM (Elapsed Time: 1 minutes 0 seconds)</msg></messages>

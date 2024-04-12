@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Friday, April 12, 2024 11:25:53 AM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x0000026DA0EB1CD0&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="0" type="0">&lt;MappingArcGISProjectObject object at 0x0000026DE613C8B0&gt;</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "D:\working\xml_to_layer.py", line 214, in &lt;module&gt;
+    main()
+  File "D:\working\xml_to_layer.py", line 207, in main
+    apply_unique_symbology_to_sections_layer(dst_gdb)
+  File "D:\working\xml_to_layer.py", line 137, in apply_unique_symbology_to_sections_layer
+    arcpy.management.SaveToLayerFile(l, output_layer_path)
+  File "C:\Program Files\ArcGIS\Pro\Resources\ArcPy\arcpy\management.py", line 11240, in SaveToLayerFile
+    raise e
+  File "C:\Program Files\ArcGIS\Pro\Resources\ArcPy\arcpy\management.py", line 11237, in SaveToLayerFile
+    retval = convertArcObjectToPythonObject(gp.SaveToLayerFile_management(*gp_fixargs((in_layer, out_layer, is_relative_path, version), True)))
+  File "C:\Program Files\ArcGIS\Pro\Resources\ArcPy\arcpy\geoprocessing\_base.py", line 512, in &lt;lambda&gt;
+    return lambda *args: val(*gp_fixargs(args, True))
+arcgisscripting.ExecuteError: Failed to execute. Parameters are not valid.
+ERROR 000354: The name contains invalid characters
+Failed to execute (SaveToLayerFile).
+
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Friday, April 12, 2024 11:26:38 AM (Elapsed Time: 45.02 seconds)</msg></messages>

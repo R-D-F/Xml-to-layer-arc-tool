@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Thursday, April 11, 2024 2:29:16 PM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x0000026DA0EB1CD0&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "D:\working\xml_to_layer.py", line 158, in &lt;module&gt;
+    main()
+  File "D:\working\xml_to_layer.py", line 152, in main
+    prep_for_qc(dst_spans, dst_sections)
+  File "D:\working\xml_to_layer.py", line 77, in prep_for_qc
+    for row in cursor:
+RuntimeError: An expected Field was not found or could not be retrieved properly. [OID]
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Thursday, April 11, 2024 2:29:37 PM (Elapsed Time: 21.49 seconds)</msg></messages>
