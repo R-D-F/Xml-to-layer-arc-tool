@@ -23,10 +23,10 @@ from modeling.xml_to_tower_report import tower_report_to_shape
 arcpy.env.overwriteOutput = True
 
 #TODO:
-#Create structures layer with only dead end towers from XML
-#Create sections layer with from, to, wiretype.
+# ✓ Create structures layer with only dead end towers from XML
+# ✓ Create sections layer with from, to, wiretype.
 
-#Create arc estimate structures layer with "dead end" towers
+# ✓ Create arc estimate structures layer with "dead end" towers
 #Create arc estimate sections layer with from, to, wiretype
 
 UNIQUE_RGB_VALUES = [
@@ -113,6 +113,7 @@ def prep_for_qc(spans, sections):
             cursor.updateRow(row)
 
 def apply_unique_symbology_to_sections_layer(dst_gdb):
+    '''This currently does not work.'''
     relpath = os.path.dirname(sys.argv[0])
 
     # This needs to be made universal
@@ -141,6 +142,10 @@ def apply_unique_symbology_to_sections_layer(dst_gdb):
     
 
 def similarity_ratio(str1, str2):
+    if str1 == str2:
+        return 1.2
+    if str1 in str2 or str2 in str1:
+        return 1.1
     # Convert strings to sets of characters to find common characters
     set1 = set(str1)
     set2 = set(str2)
@@ -154,11 +159,22 @@ def similarity_ratio(str1, str2):
     return similarity_ratio
 
 def get_arc_pro_list():
+    '''This function takes the OH-conductor info table (standalone table), and returns a list of dictionaries with 
+    "SAP_FUNC_LOC_NO",
+    "CONDUCTOR_TYPE",
+    "CONDUCTOR_SIZE",
+    "CONDUCTOR_STRAND",
+    "FROM_SAP_STRUCTURE_NO",
+    "TO_SAP_STRUCTURE_NO",
+    and 
+    "BEST_MATCH_QSI_TOWER",
+    "BEST_MATCH_PERCENT",
+    as 0 so they can be replaced later'''
+
     arcpy.AddMessage(f"getting arc pro list")
     input_feature_layer = arcpy.GetParameter(3)
     line_name = arcpy.GetParameter(4)
     standalone_table = arcpy.GetParameter(5)
-
 
     field = "LINE_NAME"
     where_clause = f"{arcpy.AddFieldDelimiters(input_feature_layer, field)} = '{line_name}'"
@@ -173,12 +189,9 @@ def get_arc_pro_list():
         arcpy.AddMessage(f"{saps_func_location_number}")
         # Construct where_clause_2 using saps_func_location_number
         where_clause_2 = f"SAP_FUNC_LOC_NO = '{saps_func_location_number}'"
-        counter = 0
         # Search cursor to find related records in standalone_table
         with arcpy.da.SearchCursor(standalone_table, ["SAP_FUNC_LOC_NO", "CONDUCTOR_TYPE", "CONDUCTOR_SIZE", "CONDUCTOR_STRAND", "FROM_SAP_STRUCTURE_NO", "TO_SAP_STRUCTURE_NO"], where_clause_2) as cursor:
             for row in cursor:
-                arcpy.AddMessage(f"{counter}")
-                counter += 1
                 # Return all rows in standalone_table where SAP_FUNC_LOC_NO == saps_func_location_number
                 arc_pro_list.append({
                     "SAP_FUNC_LOC_NO":f"{row[0]}",
@@ -198,12 +211,13 @@ def get_arc_pro_list():
         if item["CONDUCTOR_TYPE"] == "CU":
             item["CONDUCTOR_TYPE"] = "copper"
     
-    arcpy.AddMessage(f"{arc_pro_list}")
     return arc_pro_list
 
 
-def create_structures_feature_from_OH_conductor(structures, gdb):   
-    arc_pro_list = get_arc_pro_list()
+def create_structures_feature_from_OH_conductor(structures, gdb, arc_pro_list):  
+    '''takes in the current structures feature class, copies it, then looks at where the structure numbers match with the OH conductor infor and applies the OH conductor info to the coppied feature.
+    It then deletes any structure that does not match with an item in OH conductor table.''' 
+    
     
     arc_structures = os.path.join(gdb, 'arc_structres')
     arcpy.CopyFeatures_management(structures, arc_structures) 
@@ -218,9 +232,6 @@ def create_structures_feature_from_OH_conductor(structures, gdb):
             for row in cursor:
                 row[0] = 0
                 cursor.updateRow(row)
-
-    # I need to loop through the arc structers, assign the most similar of the list and delete the rest.
-          
 
     arc_structures_list_of_features = ['STRUCTURE', 'ARC_FROM_STRUCTURE','ARC_TO_STRUCTURE','BEST_MATCH', 'WIRE','QSI_TOWER']
     
@@ -240,6 +251,18 @@ def create_structures_feature_from_OH_conductor(structures, gdb):
                 row[4] = f"{section_arc['CONDUCTOR_TYPE']} {section_arc['CONDUCTOR_SIZE']}{section_arc['CONDUCTOR_STRAND']}"
                 cursor.updateRow(row)
 
+    with arcpy.da.UpdateCursor(arc_structures, ['ARC_FROM_STRUCTURE']) as cursor:
+        for row in cursor:
+            if row[0] == None:
+                cursor.deleteRow()
+
+def create_sections_feature_from_OH_conductor(sections, gdb, arc_pro_list):  
+    '''takes in the current structures feature class, copies it, then looks at where the structure numbers match with the OH conductor infor and applies the OH conductor info to the coppied feature.
+    It then deletes any structure that does not match with an item in OH conductor table.''' 
+    
+    
+    arc_sections = os.path.join(gdb, 'arc_sections')
+    arcpy.CopyFeatures_management(sections, arc_sections) 
 
 
 def main():
@@ -248,8 +271,6 @@ def main():
     xml_sr = arcpy.GetParameter(1)
     dst_dir = arcpy.GetParameterAsText(2)
     
-
-
 
     # Output geodatabase
     dst_name = safe_name(
@@ -293,7 +314,8 @@ def main():
                 cursor.deleteRow()
 
     #apply_unique_symbology_to_sections_layer(dst_gdb)
-    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb)
+    arc_pro_list = get_arc_pro_list()
+    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb, arc_pro_list)
 
 
     
