@@ -1,0 +1,19 @@
+sec_no,cable_file_name,from_str,to_str,best_match,arc_wire_type,arc_from_str,arc_to_str
+1,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,EASTSHORE_SUB,000/000,0.7,ACSS 477 24/7,EASTSHORE,000/002
+2,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,000/000,000/001,0.0,,,
+3,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,000/001,000/002,0.0,,,
+4,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,000/002,000/003,1.0,ACSS 477 24/7,000/002,000/007
+5,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,000/002,000/003,1.0,ACSS 477 24/7,000/002,000/007
+6,shield_wire.wir,000/003,000/007,0.0,,,
+7,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,000/003,002/017,0.0,,,
+8,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,000/003,002/017,0.0,,,
+9,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,002/017,003/026,0.0,,,
+10,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,002/017,003/026,0.0,,,
+11,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,003/026,004/029,0.0,,,
+12,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,003/026,004/029,0.0,,,
+13,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,004/029,004/031,0.0,,,
+14,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,004/029,004/031,0.0,,,
+15,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,004/031,000/007,0.0,,,
+16,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,004/031,000/007,0.0,,,
+17,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,000/007,006/046,1.0,ACSS 477 24/7,000/007,006/046
+18,477.0 kcmil 24-7 ACSS Flicker_MA2 SW Certified-light.wir,006/046,DUMBARTON_SUB,1.0,ACSS 477 24/7,006/046,DUMBARTON
