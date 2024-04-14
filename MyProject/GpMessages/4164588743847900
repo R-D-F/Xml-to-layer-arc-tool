@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Saturday, April 13, 2024 6:29:31 PM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x0000022C13E78B30&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="0" type="0">getting arc pro list</msg><msg code="0" type="0">ETL.1840</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "C:\Users\rifra\Xml-to-layer-arc-tool\xml_to_layer.py", line 393, in &lt;module&gt;
+    main()
+  File "C:\Users\rifra\Xml-to-layer-arc-tool\xml_to_layer.py", line 385, in main
+    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb, get_arc_pro_list())
+  File "C:\Users\rifra\Xml-to-layer-arc-tool\xml_to_layer.py", line 245, in create_structures_feature_from_OH_conductor
+    if similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO']) &gt; section_arc['BEST_MATCH_PERCENT']:
+  File "C:\Users\rifra\Xml-to-layer-arc-tool\xml_to_layer.py", line 149, in similarity_ratio
+    elif str1.split("/")[1] == str2.split("/")[1]:
+IndexError: list index out of range
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Saturday, April 13, 2024 6:30:09 PM (Elapsed Time: 38.07 seconds)</msg></messages>

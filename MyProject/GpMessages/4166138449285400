@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Saturday, April 13, 2024 6:55:19 PM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">testing</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x0000022C59283D50&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="0" type="0">getting arc pro list</msg><msg code="0" type="0">ETL.1840</msg><msg code="0" type="0">0.0</msg><msg code="0" type="0">&lt;class 'float'&gt;</msg><msg code="0" type="0">017/122</msg><msg code="0" type="0">IGNACIO_SUB</msg><msg code="0" type="0">None</msg><msg code="0" type="0">&lt;class 'NoneType'&gt;</msg><msg code="0" type="0">017/122</msg><msg code="0" type="0">000/003</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "C:\Users\rifra\Xml-to-layer-arc-tool\xml_to_layer.py", line 406, in &lt;module&gt;
+    main()
+  File "C:\Users\rifra\Xml-to-layer-arc-tool\xml_to_layer.py", line 398, in main
+    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb, get_arc_pro_list())
+  File "C:\Users\rifra\Xml-to-layer-arc-tool\xml_to_layer.py", line 257, in create_structures_feature_from_OH_conductor
+    if float(similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO'])) &gt; section_arc['BEST_MATCH_PERCENT']:
+TypeError: float() argument must be a string or a number, not 'NoneType'
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Saturday, April 13, 2024 6:55:58 PM (Elapsed Time: 38.36 seconds)</msg></messages>

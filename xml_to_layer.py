@@ -142,22 +142,33 @@ def apply_unique_symbology_to_sections_layer(dst_gdb):
     
 
 def similarity_ratio(str1, str2):
+    def string_sim():
+        set1 = set(str1)
+        set2 = set(str2)
+        common_chars = set1.intersection(set2)
+        if len(set1) == 0 and len(set2) == 0:
+            return 0
+        else:
+            similarity_ratio = len(common_chars) / (len(set1) + len(set2) - len(common_chars))
+            
+            return similarity_ratio
     if str1 == str2:
-        return 1.2
-    if str1 in str2 or str2 in str1:
-        return 1.1
-    # Convert strings to sets of characters to find common characters
-    set1 = set(str1)
-    set2 = set(str2)
-    
-    # Calculate the intersection of characters
-    common_chars = set1.intersection(set2)
-    
-    # Calculate similarity ratio
-    similarity_ratio = len(common_chars) / (len(set1) + len(set2) - len(common_chars))
-    
-    return similarity_ratio
-
+        return 1.4
+    elif str1 in str2 or str2 in str1:
+        return 1.3
+    elif "/" in str1 and "/" in str2:
+        
+        if str1.split("/")[1] == str2.split("/")[1]:
+            
+            return 1.2
+        elif str1.split("/")[1] in str2.split("/")[1] or str2.split("/")[1] in str1.split("/")[1]:
+            
+            return 1.1
+        else:
+            return string_sim()
+    else:    
+        return string_sim()
+            
 def get_arc_pro_list():
     '''This function takes the OH-conductor info table (standalone table), and returns a list of dictionaries with 
     "SAP_FUNC_LOC_NO",
@@ -217,7 +228,7 @@ def get_arc_pro_list():
 def create_structures_feature_from_OH_conductor(structures, gdb, arc_pro_list):  
     '''takes in the current structures feature class, copies it, then looks at where the structure numbers match with the OH conductor infor and applies the OH conductor info to the coppied feature.
     It then deletes any structure that does not match with an item in OH conductor table.''' 
-    
+    structures_arc_pro_list = arc_pro_list
     
     arc_structures = os.path.join(gdb, 'arc_structres')
     arcpy.CopyFeatures_management(structures, arc_structures) 
@@ -227,21 +238,22 @@ def create_structures_feature_from_OH_conductor(structures, gdb, arc_pro_list):
     arcpy.AddField_management(arc_structures, 'WIRE', 'TEXT')
 
 
-    for section_arc in arc_pro_list:
-        with arcpy.da.UpdateCursor(arc_structures, 'BEST_MATCH') as cursor:
-            for row in cursor:
-                row[0] = 0
-                cursor.updateRow(row)
+    
+    with arcpy.da.UpdateCursor(arc_structures, 'BEST_MATCH') as cursor:
+        for row in cursor:
+            row[0] = 0
+            cursor.updateRow(row)
 
     arc_structures_list_of_features = ['STRUCTURE', 'ARC_FROM_STRUCTURE','ARC_TO_STRUCTURE','BEST_MATCH', 'WIRE','QSI_TOWER']
     
-    for section_arc in arc_pro_list:
+    for section_arc in structures_arc_pro_list:
         with arcpy.da.SearchCursor(arc_structures, ['STRUCTURE','QSI_TOWER']) as cursor:
             for row in cursor:
-                if similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO']) > section_arc['BEST_MATCH_PERCENT']:
+                
+                if float(similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO'])) > section_arc['BEST_MATCH_PERCENT']:
                     section_arc['BEST_MATCH_PERCENT'] = similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO'])
                     section_arc['BEST_MATCH_QSI_TOWER'] = row[1]
-    for section_arc in arc_pro_list:
+    for section_arc in structures_arc_pro_list:
         sql_query = f"QSI_TOWER = {section_arc['BEST_MATCH_QSI_TOWER']}"
         with arcpy.da.UpdateCursor(arc_structures, arc_structures_list_of_features, sql_query) as cursor:
             for row in cursor:
@@ -256,13 +268,91 @@ def create_structures_feature_from_OH_conductor(structures, gdb, arc_pro_list):
             if row[0] == None:
                 cursor.deleteRow()
 
-def create_sections_feature_from_OH_conductor(sections, gdb, arc_pro_list):  
+def create_sections_feature_from_OH_conductor(sections, gdb, arc_pro_list, sr):  
     '''takes in the current structures feature class, copies it, then looks at where the structure numbers match with the OH conductor infor and applies the OH conductor info to the coppied feature.
     It then deletes any structure that does not match with an item in OH conductor table.''' 
-    
-    
+    sections_arc_pro_list = arc_pro_list
     arc_sections = os.path.join(gdb, 'arc_sections')
-    arcpy.CopyFeatures_management(sections, arc_sections) 
+    arcpy.CopyFeatures_management(sections, arc_sections)
+    arcpy.AddField_management(arc_sections, 'ARC_FROM_STRUCTURE', 'TEXT')
+    arcpy.AddField_management(arc_sections, 'ARC_TO_STRUCTURE', 'TEXT')
+    arcpy.AddField_management(arc_sections, 'BEST_MATCH', 'DOUBLE')
+    arcpy.AddField_management(arc_sections, 'WIRE', 'TEXT') 
+    
+    
+    
+    with arcpy.da.UpdateCursor(arc_sections, ['BEST_MATCH']) as cursor:
+        for row in cursor:
+            row[0] = 0
+            cursor.updateRow(row)
+    
+
+    
+
+    arc_sections_list_of_features = ['FROM_STR', 'ARC_FROM_STRUCTURE','ARC_TO_STRUCTURE','BEST_MATCH', 'WIRE','SECTION']
+    
+    for section_arc in sections_arc_pro_list:
+        with arcpy.da.SearchCursor(sections, ['FROM_STR','SECTION']) as cursor:
+            for row in cursor:
+  
+                if float(similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO'])) > section_arc['BEST_MATCH_PERCENT']:
+                    section_arc['BEST_MATCH_PERCENT'] = similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO'])
+                    section_arc['BEST_MATCH_QSI_TOWER'] = row[1]
+   
+    for section_arc in sections_arc_pro_list:
+        sql_query = f"SECTION = {section_arc['BEST_MATCH_QSI_TOWER']}"
+        with arcpy.da.UpdateCursor(arc_sections, arc_sections_list_of_features, sql_query) as cursor:
+            for row in cursor:
+                row[1] = section_arc['FROM_SAP_STRUCTURE_NO']
+                row[2] = section_arc['TO_SAP_STRUCTURE_NO']
+                row[3] = similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO'])
+                row[4] = f"{section_arc['CONDUCTOR_TYPE']} {section_arc['CONDUCTOR_SIZE']}{section_arc['CONDUCTOR_STRAND']}"
+                cursor.updateRow(row)
+####
+    with arcpy.da.UpdateCursor(arc_sections, ['ARC_FROM_STRUCTURE']) as cursor:
+        for row in cursor:
+            if row[0] == None:
+                cursor.deleteRow()
+    
+    #makes a list of the first point coordinates for each poly line
+    vertices_to_keep = []
+    with arcpy.da.SearchCursor(arc_sections, ["SHAPE@"]) as cursor:
+        for row in cursor:
+            polyline = row[0] 
+            for part in polyline:
+                if len(part) >= 2: 
+                    first_point = (part[0].X, part[0].Y)
+                    last_point = (part[-1].X, part[-1].Y)  
+                    vertices_to_keep.append((first_point, last_point))
+    with arcpy.da.UpdateCursor(arc_sections, ["OID@", "SHAPE@"]) as cursor:
+        row_count = 0
+        for oid, row in cursor:
+            if row_count < len(vertices_to_keep) - 1:  # Ensure we have a next row to connect to
+                current_line_vertices = vertices_to_keep[row_count]
+                next_line_vertices = vertices_to_keep[row_count + 1]
+                array = arcpy.Array([arcpy.Point(*point) for point in current_line_vertices])
+                next_point = arcpy.Point(*next_line_vertices[0])  # Take the start point of the next line
+                array.add(next_point)  # Add the next start point to connect the polylines
+                polyline = arcpy.Polyline(array, sr)
+                
+                # Update the geometry of the current row
+                cursor.updateRow([oid, polyline])
+                
+                row_count += 1
+    # counter_1 = 0
+    # with arcpy.da.UpdateCursor(arc_sections,["SHAPE@"]) as cursor:
+    #     for row in cursor:
+    #         add_message(f"{vertices_to_keep[counter_1]}, {vertices_to_keep[counter_1+1]}")
+    #         array = arcpy.Array(
+    #             [arcpy.Point(vertices_to_keep[counter_1][0], vertices_to_keep[counter_1][1]), arcpy.Point(vertices_to_keep[counter_1+1][0], vertices_to_keep[counter_1+1][1])]
+    #         )
+            
+    #         polyline_2 = arcpy.Polyline(array, sr)
+    #         row[0] = polyline_2
+    #         counter_1 += 1
+    #         cursor.updateRow(row)
+
+
 
 
 def main():
@@ -291,7 +381,6 @@ def main():
 
     # Create spans and structure using xml
     add_message('    - Spans')
-    add_message("testing")
     add_message(f"{xml_sr}")
     xml_to_spans(xml_file, dst_spans, dst_structures, sr=xml_sr)
     arcpy.DefineProjection_management(dst_spans, xml_sr)
@@ -314,8 +403,9 @@ def main():
                 cursor.deleteRow()
 
     #apply_unique_symbology_to_sections_layer(dst_gdb)
-    arc_pro_list = get_arc_pro_list()
-    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb, arc_pro_list)
+    
+    create_structures_feature_from_OH_conductor(dst_structures, dst_gdb, get_arc_pro_list())
+    create_sections_feature_from_OH_conductor(dst_sections, dst_gdb, get_arc_pro_list(), sr=xml_sr )
 
 
     
