@@ -331,27 +331,14 @@ def create_sections_feature_from_OH_conductor(sections, gdb, arc_pro_list, sr):
                 current_line_vertices = vertices_to_keep[row_count]
                 next_line_vertices = vertices_to_keep[row_count + 1]
                 array = arcpy.Array([arcpy.Point(*point) for point in current_line_vertices])
-                next_point = arcpy.Point(*next_line_vertices[0])  # Take the start point of the next line
-                array.add(next_point)  # Add the next start point to connect the polylines
+                next_point = arcpy.Point(*next_line_vertices[0])  
+                array.add(next_point)  
                 polyline = arcpy.Polyline(array, sr)
                 
                 # Update the geometry of the current row
                 cursor.updateRow([oid, polyline])
                 
                 row_count += 1
-    # counter_1 = 0
-    # with arcpy.da.UpdateCursor(arc_sections,["SHAPE@"]) as cursor:
-    #     for row in cursor:
-    #         add_message(f"{vertices_to_keep[counter_1]}, {vertices_to_keep[counter_1+1]}")
-    #         array = arcpy.Array(
-    #             [arcpy.Point(vertices_to_keep[counter_1][0], vertices_to_keep[counter_1][1]), arcpy.Point(vertices_to_keep[counter_1+1][0], vertices_to_keep[counter_1+1][1])]
-    #         )
-            
-    #         polyline_2 = arcpy.Polyline(array, sr)
-    #         row[0] = polyline_2
-    #         counter_1 += 1
-    #         cursor.updateRow(row)
-
 
 
 
