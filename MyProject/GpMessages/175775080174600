@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?><messages><msg code="0" type="2">Start Time: Monday, April 15, 2024 1:22:38 PM</msg><msg code="0" type="0">
+ 1. Creating outputs
+</msg><msg code="0" type="0">    - Spans</msg><msg code="0" type="0">&lt;geoprocessing spatial reference object object at 0x00000175AD1DFB70&gt;</msg><msg code="0" type="0">    - Structures</msg><msg code="0" type="0">    - Sections</msg><msg code="0" type="0">getting arc pro list</msg><msg code="0" type="0">ETL.1840</msg><msg code="0" type="0">getting arc pro list</msg><msg code="0" type="0">ETL.1840</msg><msg code="-2147467259" type="100">Traceback (most recent call last):
+  File "D:\Xml-to-layer-arc-tool\xml_to_layer.py", line 402, in &lt;module&gt;
+    main()
+  File "D:\Xml-to-layer-arc-tool\xml_to_layer.py", line 395, in main
+    create_sections_feature_from_OH_conductor(dst_spans, dst_gdb, get_arc_pro_list(), sr=xml_sr )
+  File "D:\Xml-to-layer-arc-tool\xml_to_layer.py", line 296, in create_sections_feature_from_OH_conductor
+    for row in cursor:
+RuntimeError: Cannot find field 'FROM_STR'
+</msg><msg code="0" type="0">Failed script Script...</msg><msg code="-2147467259" type="100">Failed to execute (Script).</msg><msg code="0" type="3">Failed at Monday, April 15, 2024 1:22:57 PM (Elapsed Time: 19.36 seconds)</msg></messages>

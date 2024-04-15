@@ -289,10 +289,11 @@ def create_sections_feature_from_OH_conductor(sections, gdb, arc_pro_list, sr):
 
     
 
-    arc_sections_list_of_features = ['FROM_STR', 'ARC_FROM_STRUCTURE','ARC_TO_STRUCTURE','BEST_MATCH', 'WIRE','SECTION']
-    
+    arc_sections_list_of_features = ['BST_ID', 'ARC_FROM_STRUCTURE','ARC_TO_STRUCTURE','BEST_MATCH', 'WIRE']
+    # selelects the row if sections that has the closet match between from saps struc tand bst_id
+    #puts that into best match qsi tower
     for section_arc in sections_arc_pro_list:
-        with arcpy.da.SearchCursor(sections, ['FROM_STR','SECTION']) as cursor:
+        with arcpy.da.SearchCursor(sections, ['BST_ID','OID@']) as cursor:
             for row in cursor:
   
                 if float(similarity_ratio(row[0], section_arc['FROM_SAP_STRUCTURE_NO'])) > section_arc['BEST_MATCH_PERCENT']:
@@ -300,7 +301,7 @@ def create_sections_feature_from_OH_conductor(sections, gdb, arc_pro_list, sr):
                     section_arc['BEST_MATCH_QSI_TOWER'] = row[1]
    
     for section_arc in sections_arc_pro_list:
-        sql_query = f"SECTION = {section_arc['BEST_MATCH_QSI_TOWER']}"
+        sql_query = f"SN = {section_arc['BEST_MATCH_QSI_TOWER']}"
         with arcpy.da.UpdateCursor(arc_sections, arc_sections_list_of_features, sql_query) as cursor:
             for row in cursor:
                 row[1] = section_arc['FROM_SAP_STRUCTURE_NO']
@@ -392,7 +393,7 @@ def main():
     #apply_unique_symbology_to_sections_layer(dst_gdb)
     
     create_structures_feature_from_OH_conductor(dst_structures, dst_gdb, get_arc_pro_list())
-    create_sections_feature_from_OH_conductor(dst_sections, dst_gdb, get_arc_pro_list(), sr=xml_sr )
+    create_sections_feature_from_OH_conductor(dst_spans, dst_gdb, get_arc_pro_list(), sr=xml_sr )
 
 
     
